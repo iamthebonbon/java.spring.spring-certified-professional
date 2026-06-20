@@ -18,7 +18,7 @@ class ApplicationTests {
     @Test
     void contextLoads() {
         var response = testRestTemplate.getForEntity(
-                URI.create("/main"),
+                URI.create("/"),
                 Void.class
         );
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());

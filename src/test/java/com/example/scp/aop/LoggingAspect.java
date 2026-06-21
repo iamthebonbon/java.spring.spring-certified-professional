@@ -1,4 +1,4 @@
-package com.example.scp;
+package com.example.scp.aop;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -20,9 +20,9 @@ public class LoggingAspect {
     @Around("execution(* *..*Controller.*(..))")
     public Object around(ProceedingJoinPoint proceedingJoinPoint) {
         try {
-            logger.info("Around Before: {}", proceedingJoinPoint.getTarget().getClass());
+            logger.info("Aspect@Around Before: {}", proceedingJoinPoint.getTarget().getClass());
             Object proceed = proceedingJoinPoint.proceed();
-            logger.info("Around After: {}", proceed);
+            logger.info("Aspect@Around After: {}", proceed);
             return proceed;
         } catch (Throwable e) {
             throw new RuntimeException(e);
@@ -31,21 +31,21 @@ public class LoggingAspect {
 
     @Before("execution(* *..*Controller.*(..))")
     public void before(JoinPoint joinPoint) {
-        logger.info("Before: {}", joinPoint.getArgs());
+        logger.info("Aspect@Before: {}", joinPoint.getArgs());
     }
 
     @After("execution(* *..*Controller.*(..))")
     public void after(JoinPoint joinPoint) {
-        logger.info("After: {}", joinPoint.getArgs());
+        logger.info("Aspect@After: {}", joinPoint.getArgs());
     }
 
     @AfterReturning(value = "execution(* *..*Controller.*(..))", returning = "r")
     public void afterReturning(JoinPoint joinPoint, Object r) {
-        logger.info("AfterReturning: {}. Return: {}", joinPoint.getArgs(), r);
+        logger.info("Aspect@AfterReturning: {}. Return: {}", joinPoint.getArgs(), r);
     }
 
     @AfterThrowing(value = "execution(* *..*Controller.*(..))", throwing = "r")
     public void AfterThrowing(JoinPoint joinPoint, Exception r) {
-        logger.info("AfterThrowing: {}. Exception: {}", joinPoint.getArgs(), r);
+        logger.info("Aspect@AfterThrowing: {}. Exception: {}", joinPoint.getArgs(), r.getMessage());
     }
 }

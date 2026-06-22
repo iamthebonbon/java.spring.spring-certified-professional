@@ -17,10 +17,12 @@ import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @ExtendWith(OutputCaptureExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -29,6 +31,8 @@ class ApplicationTests {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
     @Autowired
     private BonBonRepository bonBonRepository;
 
@@ -80,6 +84,10 @@ class ApplicationTests {
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
         List<BonBon> all = bonBonRepository.findAll();
         Assertions.assertFalse(all.isEmpty());
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(
+                "select * from bon_bon"
+        );
+        Assertions.assertEquals("tasty", maps.get(0).get("candy_type"));
     }
 
 }

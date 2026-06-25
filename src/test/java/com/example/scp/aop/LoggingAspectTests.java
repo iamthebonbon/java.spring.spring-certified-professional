@@ -1,6 +1,5 @@
-package com.example.scp.tests;
+package com.example.scp.aop;
 
-import com.example.scp.aop.LoggingAspect;
 import com.example.scp.controller.MainController;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -30,7 +29,7 @@ public class LoggingAspectTests {
                 Arrays.stream(output.getOut().split("\n"))
                         .filter(v -> v.contains("com.example.scp.aop"))
                         .collect(Collectors.joining("\n"))
-                        .contains("Before")
+                        .contains("Aspect@AfterReturning")
         );
     }
 

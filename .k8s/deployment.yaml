@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scp
+  namespace: scp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scp
+  template:
+    metadata:
+      labels:
+        app: scp
+    spec:
+      containers:
+        - name: scp
+          image: scp:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080

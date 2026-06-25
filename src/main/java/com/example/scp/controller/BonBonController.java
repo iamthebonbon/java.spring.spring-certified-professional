@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/bonbon")
 public class BonBonController {
     @GetMapping
     public Map<String, String> get() {

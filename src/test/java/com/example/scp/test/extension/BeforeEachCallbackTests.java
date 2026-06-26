@@ -1,4 +1,4 @@
-package com.example.scp.test.custom;
+package com.example.scp.test.extension;
 
 import com.example.scp.extension.BeforeEachCallbackExtension;
 import org.junit.jupiter.api.Assertions;

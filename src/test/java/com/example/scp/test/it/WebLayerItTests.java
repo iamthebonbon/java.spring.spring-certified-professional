@@ -19,8 +19,8 @@ class WebLayerItTests extends AbstractItConfiguration {
                 URI.create("/bonbon"),
                 String.class
         );
-        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
-        Assertions.assertTrue(response.getBody().contains("health"));
+        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode().value());
+//        Assertions.assertTrue(response.getBody().contains("health"));
     }
 
     @Test

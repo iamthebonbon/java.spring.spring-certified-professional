@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-class DbLayerItTests extends AbstractItConfiguration {
+class RepositoryItTests extends AbstractItConfiguration {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

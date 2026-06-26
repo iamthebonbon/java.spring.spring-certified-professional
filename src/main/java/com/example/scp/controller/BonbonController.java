@@ -8,7 +8,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/bonbon")
-public class BonBonController {
+public class BonbonController {
     @GetMapping
     public Map<String, String> get() {
         return Map.of("status", "health");

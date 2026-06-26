@@ -1,7 +1,9 @@
-package com.example.scp.aop;
+package com.example.scp.test.unit;
 
+import com.example.scp.aop.LoggingAspect;
 import com.example.scp.controller.MainController;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

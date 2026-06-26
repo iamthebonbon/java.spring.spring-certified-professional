@@ -27,4 +27,25 @@ class WebLayerTests extends AbstractFullConfiguration {
         Assertions.assertTrue(response.getBody().contains("health"));
     }
 
+    @Test
+    void testHealth() {
+        LOGGER.info("ApplicationTests is called");
+        var response = testRestTemplate.getForEntity(
+                URI.create("/actuator/health"),
+                String.class
+        );
+        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+        Assertions.assertTrue(response.getBody().contains("UP"));
+    }
+
+    @Test
+    void testInfo() {
+        LOGGER.info("ApplicationTests is called");
+        var response = testRestTemplate.getForEntity(
+                URI.create("/actuator/info"),
+                String.class
+        );
+        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+    }
+
 }

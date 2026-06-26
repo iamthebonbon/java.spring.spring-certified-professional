@@ -1,4 +1,4 @@
-package com.example.scp.test;
+package com.example.scp.test.it;
 
 import com.example.scp.component.BonbonComponent;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,12 +9,12 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-@Import(AbstractFullConfiguration.Config.class)
+@Import(AbstractItConfiguration.Config.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(statements = {
         "create table if not exists bon_bon (id integer, candy_type varchar(255));"
 })
-public abstract class AbstractFullConfiguration {
+public class AbstractItConfiguration {
 
     @TestConfiguration
     public static class Config {

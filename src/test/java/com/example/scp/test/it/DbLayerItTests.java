@@ -1,4 +1,4 @@
-package com.example.scp.test;
+package com.example.scp.test.it;
 
 import com.example.scp.entity.BonBon;
 import com.example.scp.repository.BonBonRepository;
@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-class DbLayerTests extends AbstractFullConfiguration {
+class DbLayerItTests extends AbstractItConfiguration {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

@@ -1,4 +1,4 @@
-package com.example.scp.test;
+package com.example.scp.test.it;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 
 import java.net.URI;
 
-class WebLayerTests extends AbstractFullConfiguration {
+class WebLayerItTests extends AbstractItConfiguration {
 
     @Autowired
     private TestRestTemplate testRestTemplate;

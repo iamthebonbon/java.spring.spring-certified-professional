@@ -2,7 +2,6 @@ package com.example.scp.test.fullcontext;
 
 import com.example.scp.component.BonbonComponent;
 import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.MeterRegistry;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

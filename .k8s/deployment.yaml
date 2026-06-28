@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: scp
-          image: scp:latest
+          image: abdysamat/spring-certified-professional:latest
           imagePullPolicy: Never
           ports:
             - containerPort: 8080

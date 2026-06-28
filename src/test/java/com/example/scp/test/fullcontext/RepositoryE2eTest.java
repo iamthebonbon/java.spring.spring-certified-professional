@@ -14,8 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
+@Transactional
 @Sql(statements = {
-        "create table bon_bon (id integer, candy_type varchar(255));"
+        "create table bon_bon (id integer, candy_type varchar(255));",
+        "insert into bon_bon (id, candy_type) values (1, 'chocolate')"
 })
 class RepositoryE2eTest extends AbstractE2eConfiguration {
 
@@ -25,36 +27,18 @@ class RepositoryE2eTest extends AbstractE2eConfiguration {
     private BonbonRepository bonbonRepository;
 
     @Test
-    @Transactional
-    // method-level @Sql overrides class-level one
-    @Sql(statements = {
-            "create table bon_bon (id integer, candy_type varchar(255));",
-            "insert into bon_bon (id, candy_type) values (1, 'chocolate')"
-    })
     void jdbcTemplateTest() {
         Integer count = jdbcTemplate.queryForObject("select count(*) from bon_bon", Integer.class);
         Assertions.assertEquals(1, count);
     }
 
     @Test
-    @Transactional
-    // method-level @Sql overrides class-level one
-    @Sql(statements = {
-            "create table bon_bon (id integer, candy_type varchar(255));",
-            "insert into bon_bon (id, candy_type) values (1, 'cookie')"
-    })
     void jpaTest() {
         List<BonBon> all = StreamSupport.stream(bonbonRepository.findAll().spliterator(), false).toList();
         Assertions.assertEquals(1, all.size());
     }
 
     @Test
-    @Transactional
-    // method-level @Sql overrides class-level one
-    @Sql(statements = {
-            "create table bon_bon (id integer, candy_type varchar(255));",
-            "insert into bon_bon (id, candy_type) values (1, 'chocolate')"
-    })
     void getByJpqlTest() {
         Integer count = jdbcTemplate.queryForObject("select count(*) from bon_bon", Integer.class);
         Assertions.assertEquals(1, count);
@@ -63,26 +47,14 @@ class RepositoryE2eTest extends AbstractE2eConfiguration {
     }
 
     @Test
-    @Transactional
-    // method-level @Sql overrides class-level one
-    @Sql(statements = {
-            "create table bon_bon (id integer, candy_type varchar(255));",
-            "insert into bon_bon (id, candy_type) values (1, 'marmalade')"
-    })
     void getByNativeSqlTest() {
         Integer count = jdbcTemplate.queryForObject("select count(*) from bon_bon", Integer.class);
         Assertions.assertEquals(1, count);
-        BonBon chocolate = bonbonRepository.getByTypeNativeSql("marmalade");
-        Assertions.assertEquals("marmalade", chocolate.getCandyType());
+        BonBon chocolate = bonbonRepository.getByTypeNativeSql("chocolate");
+        Assertions.assertEquals("chocolate", chocolate.getCandyType());
     }
 
     @Test
-    @Transactional
-    // method-level @Sql overrides class-level one
-    @Sql(statements = {
-            "create table bon_bon (id integer, candy_type varchar(255));",
-            "insert into bon_bon (id, candy_type) values (1, 'cookie')"
-    })
     void createByNativeSqlWithoutModifyingTest() {
         JpaSystemException exception = Assertions.assertThrows(JpaSystemException.class, () -> {
             bonbonRepository.createByNativeSqlWithoutModifying(2L, "marshmallow");
@@ -94,12 +66,6 @@ class RepositoryE2eTest extends AbstractE2eConfiguration {
     }
 
     @Test
-    @Transactional
-    // method-level @Sql overrides class-level one
-    @Sql(statements = {
-            "create table bon_bon (id integer, candy_type varchar(255));",
-            "insert into bon_bon (id, candy_type) values (1, 'cookie')"
-    })
     void createByNativeSqlTest() {
         Assertions.assertEquals(1, bonbonRepository.createByNativeSql(2L, "marshmallow"));
         Assertions.assertNotNull(
@@ -108,12 +74,6 @@ class RepositoryE2eTest extends AbstractE2eConfiguration {
     }
 
     @Test
-    @Transactional
-    // method-level @Sql overrides class-level one
-    @Sql(statements = {
-            "create table bon_bon (id integer, candy_type varchar(255));",
-            "insert into bon_bon (id, candy_type) values (1, 'cookie')"
-    })
     void updateByJpqlStatusWithoutModifyingTest() {
         InvalidDataAccessApiUsageException exception = Assertions.assertThrows(InvalidDataAccessApiUsageException.class, () -> {
             bonbonRepository.updateByJpqlWithoutModifying(1L, "marshmallow");
@@ -125,35 +85,23 @@ class RepositoryE2eTest extends AbstractE2eConfiguration {
     }
 
     @Test
-    @Transactional
-    // method-level @Sql overrides class-level one
-    @Sql(statements = {
-            "create table bon_bon (id integer, candy_type varchar(255));",
-            "insert into bon_bon (id, candy_type) values (1, 'cookie')"
-    })
     void updateByJpqlWithoutClearCacheTest() {
         // Attention!!! Cache still returns same value
         Assertions.assertEquals(
-                "cookie",
+                "chocolate",
                 bonbonRepository.findById(1L).get().getCandyType()
         );
         bonbonRepository.updateByJpqlWithoutClearCache(1L, "marshmallow");
         Assertions.assertEquals(
-                "cookie",
+                "chocolate",
                 bonbonRepository.findById(1L).get().getCandyType()
         );
     }
 
     @Test
-    @Transactional
-    // method-level @Sql overrides class-level one
-    @Sql(statements = {
-            "create table bon_bon (id integer, candy_type varchar(255));",
-            "insert into bon_bon (id, candy_type) values (1, 'cookie')"
-    })
     void updateByJpqlTest() {
         Assertions.assertEquals(
-                "cookie",
+                "chocolate",
                 bonbonRepository.findById(1L).get().getCandyType()
         );
         bonbonRepository.updateByJpql(1L, "marshmallow");

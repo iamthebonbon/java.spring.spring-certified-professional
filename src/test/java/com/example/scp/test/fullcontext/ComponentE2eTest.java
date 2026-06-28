@@ -1,5 +1,6 @@
 package com.example.scp.test.fullcontext;
 
+import com.example.sibling.SiblingBonbonComponent;
 import com.example.scp.component.BonbonComponent;
 import io.micrometer.core.instrument.Counter;
 import org.junit.jupiter.api.Assertions;
@@ -10,6 +11,8 @@ class ComponentE2eTest extends AbstractE2eConfiguration {
 
     @Autowired
     private BonbonComponent bonbonComponent;
+    @Autowired
+    private SiblingBonbonComponent siblingBonbonComponent;
     @Autowired
     private Counter counter;
 

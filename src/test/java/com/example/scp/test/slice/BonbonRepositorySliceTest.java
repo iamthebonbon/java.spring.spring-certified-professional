@@ -13,6 +13,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 @DataJpaTest
 @Sql(statements = {
@@ -27,7 +28,7 @@ class BonbonRepositorySliceTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private BonbonRepository bonBonRepository;
+    private BonbonRepository bonbonRepository;
 
     @Test
     // method-level @Sql overrides class-level one
@@ -36,7 +37,7 @@ class BonbonRepositorySliceTest {
             "insert into bon_bon (id, candy_type) values (1, 'cookie')"
     })
     void test() {
-        List<BonBon> all = bonBonRepository.findAll();
+        List<BonBon> all = StreamSupport.stream(bonbonRepository.findAll().spliterator(), false).toList();
         Assertions.assertEquals(1, all.size());
         Integer count = jdbcTemplate.queryForObject("select count(*) from bon_bon", Integer.class);
         Assertions.assertEquals(1, count);

@@ -4,11 +4,12 @@ import com.example.scp.entity.BonBon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BonbonRepository extends JpaRepository<BonBon, Long> {
+public interface BonbonRepository extends CrudRepository<BonBon, Long> {
 
     @Query("select o from BonBon o where o.candyType = :type")
     BonBon getByTypeJavaPersistenceQueryLangauge(String type);

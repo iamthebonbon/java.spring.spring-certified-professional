@@ -12,6 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 @Sql(statements = {
         "create table bon_bon (id integer, candy_type varchar(255));"
@@ -43,7 +44,7 @@ class RepositoryE2eTest extends AbstractE2eConfiguration {
             "insert into bon_bon (id, candy_type) values (1, 'cookie')"
     })
     void jpaTest() {
-        List<BonBon> all = bonbonRepository.findAll();
+        List<BonBon> all = StreamSupport.stream(bonbonRepository.findAll().spliterator(), false).toList();
         Assertions.assertEquals(1, all.size());
     }
 
@@ -130,16 +131,16 @@ class RepositoryE2eTest extends AbstractE2eConfiguration {
             "create table bon_bon (id integer, candy_type varchar(255));",
             "insert into bon_bon (id, candy_type) values (1, 'cookie')"
     })
-    void updateByJpqlWithoutReturnTypeTest() {
+    void updateByJpqlWithoutClearCacheTest() {
         // Attention!!! Cache still returns same value
         Assertions.assertEquals(
                 "cookie",
-                bonbonRepository.getReferenceById(1L).getCandyType()
+                bonbonRepository.findById(1L).get().getCandyType()
         );
         bonbonRepository.updateByJpqlWithoutClearCache(1L, "marshmallow");
         Assertions.assertEquals(
                 "cookie",
-                bonbonRepository.getReferenceById(1L).getCandyType()
+                bonbonRepository.findById(1L).get().getCandyType()
         );
     }
 
@@ -153,12 +154,12 @@ class RepositoryE2eTest extends AbstractE2eConfiguration {
     void updateByJpqlTest() {
         Assertions.assertEquals(
                 "cookie",
-                bonbonRepository.getReferenceById(1L).getCandyType()
+                bonbonRepository.findById(1L).get().getCandyType()
         );
         bonbonRepository.updateByJpql(1L, "marshmallow");
         Assertions.assertEquals(
                 "marshmallow",
-                bonbonRepository.getReferenceById(1L).getCandyType()
+                bonbonRepository.findById(1L).get().getCandyType()
         );
     }
 

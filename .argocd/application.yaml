@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@github.com:iamthebonbon/java.spring.scp.git
+    repoURL: https://github.com/iamthebonbon/java.spring.spring-certified-professional.git
     targetRevision: main
     path: ./.argocd/.k8s
   destination:

@@ -139,7 +139,7 @@ class RepositoryE2eTest extends AbstractE2eConfiguration {
         bonbonRepository.updateByJpqlWithoutClearCache(1L, "marshmallow");
         Assertions.assertEquals(
                 "cookie",
-                bonbonRepository.getByTypeJavaPersistenceQueryLangauge("marshmallow").getCandyType()
+                bonbonRepository.getReferenceById(1L).getCandyType()
         );
     }
 
@@ -158,7 +158,7 @@ class RepositoryE2eTest extends AbstractE2eConfiguration {
         bonbonRepository.updateByJpql(1L, "marshmallow");
         Assertions.assertEquals(
                 "marshmallow",
-                bonbonRepository.getByTypeNativeSql("marshmallow").getCandyType()
+                bonbonRepository.getReferenceById(1L).getCandyType()
         );
     }
 

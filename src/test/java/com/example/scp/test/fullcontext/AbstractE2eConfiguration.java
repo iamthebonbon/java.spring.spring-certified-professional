@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-@Import(AbstractConfiguration.Config.class)
+@Import(AbstractE2eConfiguration.Config.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public abstract class AbstractConfiguration {
+public abstract class AbstractE2eConfiguration {
 
     @TestConfiguration
     public static class Config {

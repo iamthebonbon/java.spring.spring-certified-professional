@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class ComponentTest extends AbstractConfiguration {
+class ComponentE2eTest extends AbstractE2eConfiguration {
 
     @Autowired
     private BonbonComponent bonbonComponent;

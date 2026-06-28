@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.IllegalTransactionStateException;
 import org.springframework.transaction.annotation.Transactional;
 
-class ServiceTransactionTest extends AbstractConfiguration {
+class TransactionE2eTest extends AbstractE2eConfiguration {
 
     @Autowired
     private TransactionPropagationService transactionPropagationService;
@@ -15,9 +15,10 @@ class ServiceTransactionTest extends AbstractConfiguration {
     @Test
     @Transactional
     public void never() {
-        var exception = Assertions.assertThrows(IllegalTransactionStateException.class, () -> {
-            transactionPropagationService.never();
-        });
+        var exception = Assertions.assertThrows(
+                IllegalTransactionStateException.class,
+                () -> transactionPropagationService.never()
+        );
         Assertions.assertEquals(
                 "Existing transaction found for transaction marked with propagation 'never'",
                 exception.getMessage()
@@ -26,9 +27,10 @@ class ServiceTransactionTest extends AbstractConfiguration {
 
     @Test
     public void mandatory() {
-        var exception = Assertions.assertThrows(IllegalTransactionStateException.class, () -> {
-            transactionPropagationService.mandatory();
-        });
+        var exception = Assertions.assertThrows(
+                IllegalTransactionStateException.class,
+                () -> transactionPropagationService.mandatory()
+        );
         Assertions.assertEquals(
                 "No existing transaction found for transaction marked with propagation 'mandatory'",
                 exception.getMessage()

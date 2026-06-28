@@ -4,14 +4,18 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalManagementPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 
-class WebLayerTest extends AbstractConfiguration {
+class WebLayerE2eTest extends AbstractE2eConfiguration {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
+    @LocalManagementPort
+    private int managementPort;
 
     @Test
     void testOne() {
@@ -24,8 +28,9 @@ class WebLayerTest extends AbstractConfiguration {
 
     @Test
     void testHealth() {
-        var response = testRestTemplate.getForEntity(
-                URI.create("/actuator/health"),
+        RestTemplate restTemplate = testRestTemplate.getRestTemplate();
+        var response = restTemplate.getForEntity(
+                String.format("http://localhost:%s/actuator/health", managementPort),
                 String.class
         );
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
@@ -35,7 +40,7 @@ class WebLayerTest extends AbstractConfiguration {
     @Test
     void testInfo() {
         var response = testRestTemplate.getForEntity(
-                URI.create("/actuator/info"),
+                String.format("http://localhost:%s/actuator/info", managementPort),
                 String.class
         );
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());

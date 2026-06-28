@@ -1,7 +1,7 @@
 package com.example.scp.test.slice;
 
 import com.example.scp.entity.BonBon;
-import com.example.scp.repository.BonBonRepository;
+import com.example.scp.repository.BonbonRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ class BonbonRepositorySliceTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private BonBonRepository bonBonRepository;
+    private BonbonRepository bonBonRepository;
 
     @Test
     // method-level @Sql overrides class-level one

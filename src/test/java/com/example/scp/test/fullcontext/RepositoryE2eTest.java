@@ -1,7 +1,7 @@
 package com.example.scp.test.fullcontext;
 
 import com.example.scp.entity.BonBon;
-import com.example.scp.repository.BonBonRepository;
+import com.example.scp.repository.BonbonRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ class RepositoryE2eTest extends AbstractE2eConfiguration {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private BonBonRepository bonBonRepository;
+    private BonbonRepository bonBonRepository;
 
     @Test
     @Order(100)

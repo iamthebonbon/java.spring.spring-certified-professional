@@ -16,7 +16,8 @@ import java.util.stream.StreamSupport;
 @Transactional
 @Sql(statements = {
         "create table bon_bon (id integer, candy_type varchar(255));",
-        "insert into bon_bon (id, candy_type) values (1, 'chocolate')"
+        "insert into bon_bon (id, candy_type) values (1, 'chocolate')",
+        "insert into bon_bon (id, candy_type) values (1, 'cookie')"
 })
 class BonbonRepositoryE2eTest extends AbstractE2eConfiguration {
 
@@ -28,13 +29,42 @@ class BonbonRepositoryE2eTest extends AbstractE2eConfiguration {
     @Test
     void jdbcTemplateTest() {
         Integer count = jdbcTemplate.queryForObject("select count(*) from bon_bon", Integer.class);
-        Assertions.assertEquals(1, count);
+        Assertions.assertEquals(2, count);
     }
 
     @Test
-    void jpaTest() {
+    void repositoryTest() {
         List<BonBon> all = StreamSupport.stream(bonbonRepository.findAll().spliterator(), false).toList();
-        Assertions.assertEquals(1, all.size());
+        Assertions.assertEquals(2, all.size());
+    }
+
+    @Test
+    void resultSetTest() {
+        Assertions.assertEquals(
+                "chocolatecookie",
+                jdbcTemplate.query("select * from bon_bon order by id",
+                        rs -> {
+                            StringBuilder stringBuilder = new StringBuilder();
+                            while (rs.next()) {
+                                stringBuilder.append(rs.getString("candy_type"));
+                            }
+                            return stringBuilder.toString();
+                        }
+                )
+        );
+    }
+
+    @Test
+    void rowCallbackHandlerTest() {
+        StringBuilder sb = new StringBuilder();
+        jdbcTemplate.query("select * from bon_bon order by id",
+                rs -> {
+                    while (rs.next()) {
+                        sb.append(rs.getString("candy_type"));
+                    }
+                }
+        );
+        Assertions.assertEquals("chocolatecookie", sb.toString());
     }
 
 }

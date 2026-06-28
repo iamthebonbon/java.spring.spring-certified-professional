@@ -1,4 +1,4 @@
-package com.example.scp.test.it;
+package com.example.scp.test.fullcontext;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 
 import java.net.URI;
 
-class WebLayerItTests extends AbstractItConfiguration {
+class WebLayerTest extends AbstractConfiguration {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
@@ -20,7 +20,6 @@ class WebLayerItTests extends AbstractItConfiguration {
                 String.class
         );
         Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode().value());
-//        Assertions.assertTrue(response.getBody().contains("health"));
     }
 
     @Test

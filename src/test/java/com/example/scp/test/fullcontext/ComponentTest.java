@@ -1,11 +1,11 @@
-package com.example.scp.test.it;
+package com.example.scp.test.fullcontext;
 
 import com.example.scp.component.BonbonComponent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class ActuatorItTests extends AbstractItConfiguration {
+class ComponentTest extends AbstractConfiguration {
 
     @Autowired
     private BonbonComponent bonbonComponent;

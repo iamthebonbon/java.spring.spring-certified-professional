@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(BeforeEachCallbackExtension.class)
-public class BeforeEachCallbackTests {
+public class BeforeEachCallbackExtensionTest {
 
     @Test
     public void first() {

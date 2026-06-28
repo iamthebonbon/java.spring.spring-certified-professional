@@ -1,4 +1,4 @@
-package com.example.scp.test.aop;
+package com.example.scp.test.particularcontext;
 
 import com.example.scp.aop.LoggingAspect;
 import com.example.scp.controller.MainController;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @EnableAspectJAutoProxy
 @Import({MainController.class, LoggingAspect.class})
 @ExtendWith({SpringExtension.class, OutputCaptureExtension.class})
-public class LoggingAspectTests {
+public class LoggingAspectImportTest {
 
     @Test
     void contextLoads(

@@ -1,4 +1,4 @@
-package com.example.scp.test.it;
+package com.example.scp.test.fullcontext;
 
 import com.example.scp.service.TransactionPropagationService;
 import org.junit.jupiter.api.Assertions;
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.IllegalTransactionStateException;
 import org.springframework.transaction.annotation.Transactional;
 
-class TransactionItTests extends AbstractItConfiguration {
+class ServiceTransactionTest extends AbstractConfiguration {
 
     @Autowired
     private TransactionPropagationService transactionPropagationService;

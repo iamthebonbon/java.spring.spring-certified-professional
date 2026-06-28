@@ -16,9 +16,9 @@ import java.util.List;
 
 @DataJpaTest
 @Sql(statements = {
-        "create table if not exists bon_bon (id integer, candy_type varchar(255));"
+        "create table bon_bon (id integer, candy_type varchar(255));"
 })
-class DataJpaTests {
+class BonbonRepositoryTest {
 
     @Container
     @ServiceConnection
@@ -30,11 +30,16 @@ class DataJpaTests {
     private BonBonRepository bonBonRepository;
 
     @Test
+    // method-level @Sql overrides class-level one
+    @Sql(statements = {
+            "create table bon_bon (id integer, candy_type varchar(255));",
+            "insert into bon_bon (id, candy_type) values (1, 'cookie')"
+    })
     void test() {
         List<BonBon> all = bonBonRepository.findAll();
-        Assertions.assertTrue(all.isEmpty());
+        Assertions.assertEquals(1, all.size());
         Integer count = jdbcTemplate.queryForObject("select count(*) from bon_bon", Integer.class);
-        Assertions.assertEquals(0, count);
+        Assertions.assertEquals(1, count);
     }
 
 }

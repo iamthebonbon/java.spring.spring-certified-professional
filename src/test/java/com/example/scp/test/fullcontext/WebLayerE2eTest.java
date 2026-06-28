@@ -19,10 +19,11 @@ class WebLayerE2eTest extends AbstractE2eConfiguration {
 
     @Test
     void getBonbonTest() {
-        var response = testRestTemplate.getForEntity(
-                URI.create("/bonbon"),
-                String.class
-        );
+        var response = testRestTemplate
+                .getForEntity(
+                        URI.create("/bonbon"),
+                        String.class
+                );
         Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode().value());
     }
 
@@ -39,10 +40,12 @@ class WebLayerE2eTest extends AbstractE2eConfiguration {
 
     @Test
     void actuatorInfoTest() {
-        var response = testRestTemplate.getForEntity(
-                String.format("http://localhost:%s/actuator/info", managementPort),
-                String.class
-        );
+        var response = testRestTemplate
+                .withBasicAuth("user", "user")
+                .getForEntity(
+                        String.format("http://localhost:%s/actuator/info", managementPort),
+                        String.class
+                );
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
     }
 

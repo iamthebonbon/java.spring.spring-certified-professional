@@ -18,7 +18,7 @@ class WebLayerE2eTest extends AbstractE2eConfiguration {
     private int managementPort;
 
     @Test
-    void testOne() {
+    void getBonbonTest() {
         var response = testRestTemplate.getForEntity(
                 URI.create("/bonbon"),
                 String.class
@@ -27,7 +27,7 @@ class WebLayerE2eTest extends AbstractE2eConfiguration {
     }
 
     @Test
-    void testHealth() {
+    void actuatorHealthTest() {
         RestTemplate restTemplate = testRestTemplate.getRestTemplate();
         var response = restTemplate.getForEntity(
                 String.format("http://localhost:%s/actuator/health", managementPort),
@@ -38,7 +38,7 @@ class WebLayerE2eTest extends AbstractE2eConfiguration {
     }
 
     @Test
-    void testInfo() {
+    void actuatorInfoTest() {
         var response = testRestTemplate.getForEntity(
                 String.format("http://localhost:%s/actuator/info", managementPort),
                 String.class

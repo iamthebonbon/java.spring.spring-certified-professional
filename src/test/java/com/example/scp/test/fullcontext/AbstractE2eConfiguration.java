@@ -1,6 +1,7 @@
 package com.example.scp.test.fullcontext;
 
 import com.example.scp.component.BonbonComponent;
+import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -26,10 +27,15 @@ public abstract class AbstractE2eConfiguration {
             return new BonbonComponent() {
                 @Override
                 public String comCheck() {
-                    meterRegistry.counter("bonbon-component", "houston", "com check").increment();
+                    meterRegistry.counter("bonbon-counter", "houston", "com check").increment();
                     return "Iam test Houston";
                 }
             };
+        }
+
+        @Bean
+        public Counter counter(MeterRegistry meterRegistry) {
+            return meterRegistry.counter("bonbon-counter", "houston", "com check");
         }
     }
 

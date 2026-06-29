@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: scp-ingress
   namespace: scp
+  name: scp-ingress
 spec:
   ingressClassName: nginx
   rules:
@@ -13,6 +13,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: scp
+                name: scp-service
                 port:
                   number: 80

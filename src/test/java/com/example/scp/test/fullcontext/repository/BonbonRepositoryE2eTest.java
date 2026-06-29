@@ -2,6 +2,7 @@ package com.example.scp.test.fullcontext.repository;
 
 import com.example.scp.entity.BonBon;
 import com.example.scp.repository.BonbonRepository;
+import com.example.scp.repository.projection.BonbonProjection;
 import com.example.scp.test.fullcontext.AbstractE2eConfiguration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,14 @@ class BonbonRepositoryE2eTest extends AbstractE2eConfiguration {
     void repositoryTest() {
         List<BonBon> all = StreamSupport.stream(bonbonRepository.findAll().spliterator(), false).toList();
         Assertions.assertEquals(2, all.size());
+    }
+
+    @Test
+    void projectionsTest() {
+        BonbonProjection projection = bonbonRepository.findByCandyType("chocolate");
+        Assertions.assertEquals("1 chocolate", projection.getType());
+        BonbonProjection dynamicProjection = bonbonRepository.findByCandyType("cookie", BonbonProjection.class);
+        Assertions.assertEquals("2 cookie", dynamicProjection.getType());
     }
 
     @Test

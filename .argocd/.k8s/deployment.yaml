@@ -7,7 +7,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: scp-deployment-label
+      app: scp-app
   template:
     metadata:
       labels:

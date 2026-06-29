@@ -9,6 +9,7 @@ public class BonbonHealthIndicator implements HealthIndicator {
     @Override
     public Health health() {
         return Health.down()
+                .withDetail("houston", "com, check")
                 .build();
     }
 }

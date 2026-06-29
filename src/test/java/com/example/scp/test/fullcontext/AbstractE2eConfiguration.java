@@ -45,6 +45,9 @@ public abstract class AbstractE2eConfiguration {
             return meterRegistry.counter("bonbon-counter", "counter", "com check");
         }
 
+        /**
+         * Global tag
+         */
         @Bean
         public MeterRegistryCustomizer<MeterRegistry> meterRegistryMeterRegistryCustomizer() {
             return registry -> registry.config().commonTags("houston", "com, check");

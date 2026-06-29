@@ -80,6 +80,42 @@ class WebLayerE2eTest extends AbstractE2eConfiguration {
 
     @Test
     @Order(200)
+    void actuatorHealthDefaultTest() throws JsonProcessingException {
+        RestTemplate restTemplate = testRestTemplate
+                .withBasicAuth("user", "user")
+                .getRestTemplate();
+        var response = restTemplate.getForEntity(
+                String.format("http://localhost:%s/management/status/default", managementPort),
+                String.class
+        );
+        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+        JsonNode root = getJsonNode(response);
+
+        String status = root.get("status").asText();
+        String dbStatus = root.at("/components/db/status").asText();
+        String database = root.at("/components/db/details/database").asText();
+
+        Assertions.assertEquals("UP", status);
+        Assertions.assertEquals("UP", dbStatus);
+        Assertions.assertEquals("PostgreSQL", database);
+    }
+
+    @Test
+    @Order(200)
+    void actuatorHealthBonbonTest() throws JsonProcessingException {
+        RestTemplate restTemplate = testRestTemplate
+                .withBasicAuth("user", "user")
+                .getRestTemplate();
+        var response = restTemplate.getForEntity(
+                String.format("http://localhost:%s/management/status/external", managementPort),
+                String.class
+        );
+        Assertions.assertEquals(HttpStatus.SERVICE_UNAVAILABLE.value(), response.getStatusCode().value());
+        Assertions.assertEquals("{\"status\":\"DOWN\",\"components\":{\"bonbon\":{\"status\":\"DOWN\",\"details\":{\"houston\":\"com, check\"}}}}", response.getBody());
+    }
+
+    @Test
+    @Order(200)
     void actuatorInfoTest() throws JsonProcessingException {
         var response = testRestTemplate
                 .withBasicAuth("user", "user")

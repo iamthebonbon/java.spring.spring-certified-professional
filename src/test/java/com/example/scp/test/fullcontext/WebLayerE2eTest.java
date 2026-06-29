@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalManagementPort;
@@ -15,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class WebLayerE2eTest extends AbstractE2eConfiguration {
 
     @Autowired
@@ -112,7 +115,7 @@ class WebLayerE2eTest extends AbstractE2eConfiguration {
         var response = testRestTemplate
                 .withBasicAuth("user", "user")
                 .getForEntity(
-                        String.format("http://localhost:%s/management/metrics/spring.security.authentications", managementPort),
+                        String.format("http://localhost:%s/management/metrics/http.server.requests", managementPort),
                         String.class
                 );
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());

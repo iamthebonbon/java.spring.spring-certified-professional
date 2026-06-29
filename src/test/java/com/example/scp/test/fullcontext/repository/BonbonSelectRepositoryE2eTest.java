@@ -26,12 +26,53 @@ class BonbonSelectRepositoryE2eTest extends AbstractE2eConfiguration {
     void getByNativeSqlTest() {
         BonBon chocolate = bonbonSelectRepository.getByTypeNativeSql("chocolate");
         Assertions.assertEquals("chocolate", chocolate.getCandyType());
+    }
 
+    @Test
+    void getByTypeNativeSqlParamTest() {
+        BonBon chocolate = bonbonSelectRepository.getByTypeNativeSqlParam("chocolate");
+        Assertions.assertEquals("chocolate", chocolate.getCandyType());
+    }
+
+    @Test
+    void getByTypeNativeSqlPositionalTest() {
+        BonBon chocolate = bonbonSelectRepository.getByTypeNativeSqlPositional("chocolate");
+        Assertions.assertEquals("chocolate", chocolate.getCandyType());
+    }
+
+    @Test
+    void getByTypeNativeSqlSpelTest() {
+        BonBon chocolate = bonbonSelectRepository.getByTypeNativeSqlSpel("chocolate");
+        Assertions.assertEquals("chocolate", chocolate.getCandyType());
     }
 
     @Test
     void getByJpqlTest() {
         BonBon chocolate = bonbonSelectRepository.getByTypeJavaPersistenceQueryLangauge("chocolate");
+        Assertions.assertEquals("chocolate", chocolate.getCandyType());
+        Integer count = jdbcTemplate.queryForObject("select count(*) from bon_bon", Integer.class);
+        Assertions.assertEquals(1, count);
+    }
+
+    @Test
+    void getByTypeJavaPersistenceQueryLangaugeParamTest() {
+        BonBon chocolate = bonbonSelectRepository.getByTypeJavaPersistenceQueryLangaugeParam("chocolate");
+        Assertions.assertEquals("chocolate", chocolate.getCandyType());
+        Integer count = jdbcTemplate.queryForObject("select count(*) from bon_bon", Integer.class);
+        Assertions.assertEquals(1, count);
+    }
+
+    @Test
+    void getByTypeJavaPersistenceQueryLangaugePositionalTest() {
+        BonBon chocolate = bonbonSelectRepository.getByTypeJavaPersistenceQueryLangaugePositional("chocolate");
+        Assertions.assertEquals("chocolate", chocolate.getCandyType());
+        Integer count = jdbcTemplate.queryForObject("select count(*) from bon_bon", Integer.class);
+        Assertions.assertEquals(1, count);
+    }
+
+    @Test
+    void getByTypeJavaPersistenceQueryLangaugeSpelTest() {
+        BonBon chocolate = bonbonSelectRepository.getByTypeJavaPersistenceQueryLangaugeSpel("chocolate");
         Assertions.assertEquals("chocolate", chocolate.getCandyType());
         Integer count = jdbcTemplate.queryForObject("select count(*) from bon_bon", Integer.class);
         Assertions.assertEquals(1, count);

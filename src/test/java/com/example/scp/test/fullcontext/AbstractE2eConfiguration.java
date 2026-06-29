@@ -4,6 +4,10 @@ import com.example.scp.component.BonbonComponent;
 import com.example.scp.config.properties.BonbonProperties;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +24,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @PropertySource("classpath:bonbon.properties")
 @PropertySource(value = "classpath:not-existed.properties", ignoreResourceNotFound = true)
 public abstract class AbstractE2eConfiguration {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractE2eConfiguration.class);
 
     @TestConfiguration
     public static class Config {
@@ -51,6 +56,20 @@ public abstract class AbstractE2eConfiguration {
         @Bean
         public MeterRegistryCustomizer<MeterRegistry> meterRegistryMeterRegistryCustomizer() {
             return registry -> registry.config().commonTags("houston", "com, check");
+        }
+
+        @Bean
+        public CommandLineRunner commandLineRunner() {
+            return args -> {
+                LOGGER.info("CommandLineRunner is called: {}", (Object[]) args);
+            };
+        }
+
+        @Bean
+        public ApplicationRunner applicationRunner() {
+            return args -> {
+                LOGGER.info("ApplicationRunner is called: {}", (Object[]) args.getSourceArgs());
+            };
         }
     }
 

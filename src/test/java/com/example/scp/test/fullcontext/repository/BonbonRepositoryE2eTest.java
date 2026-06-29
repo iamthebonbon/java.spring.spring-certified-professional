@@ -7,9 +7,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
@@ -17,7 +20,7 @@ import java.util.stream.StreamSupport;
 @Sql(statements = {
         "create table bon_bon (id integer, candy_type varchar(255));",
         "insert into bon_bon (id, candy_type) values (1, 'chocolate')",
-        "insert into bon_bon (id, candy_type) values (1, 'cookie')"
+        "insert into bon_bon (id, candy_type) values (2, 'cookie')"
 })
 class BonbonRepositoryE2eTest extends AbstractE2eConfiguration {
 
@@ -56,10 +59,13 @@ class BonbonRepositoryE2eTest extends AbstractE2eConfiguration {
 
     @Test
     void rowCallbackHandlerTest() {
+        Integer count = jdbcTemplate.queryForObject("select count(*) from bon_bon", Integer.class);
+        Assertions.assertEquals(2, count);
         StringBuilder sb = new StringBuilder();
         jdbcTemplate.query("select * from bon_bon order by id",
-                rs -> {
-                    while (rs.next()) {
+                new RowCallbackHandler() {
+                    @Override
+                    public void processRow(ResultSet rs) throws SQLException {
                         sb.append(rs.getString("candy_type"));
                     }
                 }

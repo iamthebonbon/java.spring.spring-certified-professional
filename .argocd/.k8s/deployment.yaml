@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: scp
-          image: abdysamat/spring-certified-professional:latest
+          image: abdysamat/spring-certified-professional:59732a75172c0bc69d1312df9ff4d6f976110f62
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

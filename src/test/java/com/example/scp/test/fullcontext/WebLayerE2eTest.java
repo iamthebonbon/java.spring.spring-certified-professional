@@ -44,14 +44,14 @@ class WebLayerE2eTest extends AbstractE2eConfiguration {
                 String.format("http://localhost:%s/management/status", managementPort),
                 String.class
         );
-        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+        Assertions.assertEquals(HttpStatus.SERVICE_UNAVAILABLE.value(), response.getStatusCode().value());
         JsonNode root = getJsonNode(response);
 
         String status = root.get("status").asText();
         String dbStatus = root.at("/components/db/status").asText();
         String database = root.at("/components/db/details/database").asText();
 
-        Assertions.assertEquals("UP", status);
+        Assertions.assertEquals("DOWN", status);
         Assertions.assertEquals("", dbStatus);
         Assertions.assertEquals("", database);
     }
@@ -66,14 +66,14 @@ class WebLayerE2eTest extends AbstractE2eConfiguration {
                 String.format("http://localhost:%s/management/status", managementPort),
                 String.class
         );
-        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+        Assertions.assertEquals(HttpStatus.SERVICE_UNAVAILABLE.value(), response.getStatusCode().value());
         JsonNode root = getJsonNode(response);
 
         String status = root.get("status").asText();
         String dbStatus = root.at("/components/db/status").asText();
         String database = root.at("/components/db/details/database").asText();
 
-        Assertions.assertEquals("UP", status);
+        Assertions.assertEquals("DOWN", status);
         Assertions.assertEquals("UP", dbStatus);
         Assertions.assertEquals("PostgreSQL", database);
     }

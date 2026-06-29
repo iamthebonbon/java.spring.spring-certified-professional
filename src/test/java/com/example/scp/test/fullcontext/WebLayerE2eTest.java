@@ -116,6 +116,20 @@ class WebLayerE2eTest extends AbstractE2eConfiguration {
 
     @Test
     @Order(200)
+    void actuatorBonbonTest() throws JsonProcessingException {
+        RestTemplate restTemplate = testRestTemplate
+                .withBasicAuth("user", "user")
+                .getRestTemplate();
+        var response = restTemplate.getForEntity(
+                String.format("http://localhost:%s/management/bonbon", managementPort),
+                String.class
+        );
+        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+        Assertions.assertEquals("Halo, houston", response.getBody());
+    }
+
+    @Test
+    @Order(200)
     void actuatorInfoTest() throws JsonProcessingException {
         var response = testRestTemplate
                 .withBasicAuth("user", "user")

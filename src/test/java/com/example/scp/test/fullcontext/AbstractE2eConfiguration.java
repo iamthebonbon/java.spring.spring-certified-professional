@@ -2,6 +2,7 @@ package com.example.scp.test.fullcontext;
 
 import com.example.scp.component.BonbonComponent;
 import com.example.scp.config.properties.BonbonProperties;
+import com.example.sibling.SiblingBonbonComponent;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
@@ -35,8 +36,8 @@ public abstract class AbstractE2eConfiguration {
         }
 
         @Bean
-        public BonbonComponent bonbonComponent(MeterRegistry meterRegistry) {
-            return new BonbonComponent() {
+        public BonbonComponent bonbonComponent(MeterRegistry meterRegistry, SiblingBonbonComponent siblingBonbonComponent) {
+            return new BonbonComponent(siblingBonbonComponent) {
                 @Override
                 public String comCheck() {
                     meterRegistry.counter("bonbon-counter", "counter", "com check").increment();

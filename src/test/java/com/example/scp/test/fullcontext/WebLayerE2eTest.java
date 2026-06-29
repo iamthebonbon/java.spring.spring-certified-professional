@@ -1,11 +1,16 @@
 package com.example.scp.test.fullcontext;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalManagementPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -18,6 +23,7 @@ class WebLayerE2eTest extends AbstractE2eConfiguration {
     private int managementPort;
 
     @Test
+    @Order(100)
     void getBonbonTest() {
         var response = testRestTemplate
                 .getForEntity(
@@ -28,25 +34,92 @@ class WebLayerE2eTest extends AbstractE2eConfiguration {
     }
 
     @Test
-    void actuatorHealthTest() {
+    @Order(200)
+    void actuatorHealthTest() throws JsonProcessingException {
         RestTemplate restTemplate = testRestTemplate.getRestTemplate();
         var response = restTemplate.getForEntity(
-                String.format("http://localhost:%s/actuator/health", managementPort),
+                String.format("http://localhost:%s/management/status", managementPort),
                 String.class
         );
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
-        Assertions.assertTrue(response.getBody().contains("UP"));
+        JsonNode root = getJsonNode(response);
+
+        String status = root.get("status").asText();
+        String dbStatus = root.at("/components/db/status").asText();
+        String database = root.at("/components/db/details/database").asText();
+
+        Assertions.assertEquals("UP", status);
+        Assertions.assertEquals("", dbStatus);
+        Assertions.assertEquals("", database);
     }
 
     @Test
-    void actuatorInfoTest() {
+    @Order(200)
+    void actuatorHealthWhenAuthorizedTest() throws JsonProcessingException {
+        RestTemplate restTemplate = testRestTemplate
+                .withBasicAuth("user", "user")
+                .getRestTemplate();
+        var response = restTemplate.getForEntity(
+                String.format("http://localhost:%s/management/status", managementPort),
+                String.class
+        );
+        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+        JsonNode root = getJsonNode(response);
+
+        String status = root.get("status").asText();
+        String dbStatus = root.at("/components/db/status").asText();
+        String database = root.at("/components/db/details/database").asText();
+
+        Assertions.assertEquals("UP", status);
+        Assertions.assertEquals("UP", dbStatus);
+        Assertions.assertEquals("PostgreSQL", database);
+    }
+
+    @Test
+    @Order(200)
+    void actuatorInfoTest() throws JsonProcessingException {
         var response = testRestTemplate
                 .withBasicAuth("user", "user")
                 .getForEntity(
-                        String.format("http://localhost:%s/actuator/info", managementPort),
+                        String.format("http://localhost:%s/management/info", managementPort),
                         String.class
                 );
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+        JsonNode root = getJsonNode(response);
+
+        String one = root.at("/bonbon/one").asText();
+        String two = root.at("/bonbon/two").asText();
+
+        Assertions.assertEquals("Marmalade", one);
+        Assertions.assertEquals("Marshmallow", two);
+    }
+
+    @Test
+    @Order(200)
+    void actuatorMetricsTest() {
+        var response = testRestTemplate
+                .withBasicAuth("user", "user")
+                .getForEntity(
+                        String.format("http://localhost:%s/management/metrics", managementPort),
+                        String.class
+                );
+        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+    }
+
+    @Test
+    @Order(200)
+    void actuatorMetricsHttpServerRequestsTest() {
+        var response = testRestTemplate
+                .withBasicAuth("user", "user")
+                .getForEntity(
+                        String.format("http://localhost:%s/management/metrics/spring.security.authentications", managementPort),
+                        String.class
+                );
+        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+    }
+
+    private static JsonNode getJsonNode(ResponseEntity<String> response) throws JsonProcessingException {
+        return new ObjectMapper().readTree(response.getBody());
     }
 
 }

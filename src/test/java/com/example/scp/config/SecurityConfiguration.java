@@ -1,5 +1,6 @@
 package com.example.scp.config;
 
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -25,12 +26,11 @@ public class SecurityConfiguration {
                 )
         );
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        http.securityMatcher("/actuator/**")
+        http.securityMatcher(EndpointRequest.toAnyEndpoint())
                 .authenticationProvider(daoAuthenticationProvider)
-                .authorizeHttpRequests(
-                        auth -> auth
-                                .requestMatchers("/actuator/health").permitAll()
-                                .anyRequest().authenticated()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(EndpointRequest.to("health")).permitAll()
+                        .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)

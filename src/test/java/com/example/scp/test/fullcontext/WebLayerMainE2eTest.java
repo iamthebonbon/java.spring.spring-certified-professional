@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -168,6 +169,46 @@ class WebLayerMainE2eTest extends AbstractE2eConfiguration {
                         String.class
                 );
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+        verify(component, times(1)).comCheck();
+    }
+
+    @Test
+    @Order(100)
+    void preFilterTest() {
+        var response = testRestTemplate
+                .withBasicAuth("user", "user")
+                .exchange(
+                        URI.create("/bonbon/pre-filter"),
+                        HttpMethod.POST,
+                        new HttpEntity<>(List.of(
+                                new BonbonController.BonbonResponse("user"),
+                                new BonbonController.BonbonResponse("deny")
+                        )),
+                        new ParameterizedTypeReference<List<BonbonController.BonbonResponse>>() {
+                        }
+                );
+        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+        Assertions.assertEquals(1, response.getBody().size());
+        verify(component, times(1)).comCheck();
+    }
+
+    @Test
+    @Order(100)
+    void postFilterTest() {
+        var response = testRestTemplate
+                .withBasicAuth("user", "user")
+                .exchange(
+                        URI.create("/bonbon/post-filter"),
+                        HttpMethod.POST,
+                        new HttpEntity<>(List.of(
+                                new BonbonController.BonbonResponse("user"),
+                                new BonbonController.BonbonResponse("deny")
+                        )),
+                        new ParameterizedTypeReference<List<BonbonController.BonbonResponse>>() {
+                        }
+                );
+        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+        Assertions.assertEquals(1, response.getBody().size());
         verify(component, times(1)).comCheck();
     }
 

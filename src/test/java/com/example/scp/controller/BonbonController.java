@@ -2,7 +2,9 @@ package com.example.scp.controller;
 
 import com.example.scp.component.BonbonComponent;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,6 +71,29 @@ public class BonbonController {
         return request;
     }
 
+    @PreAuthorize("hasAnyRole('USER')")
+    @PostAuthorize("hasAnyRole('USER')")
+    @PreFilter(value = "filterObject.owner == authentication.name", filterTarget = "request")
+    @PostMapping("/pre-filter")
+    public List<BonbonResponse> preFilter(
+            Authentication auth,
+            @RequestBody List<BonbonResponse> request
+    ) {
+        bonbonComponent.comCheck();
+        return request;
+    }
+
+    @PreAuthorize("hasAnyRole('USER')")
+    @PostAuthorize("hasAnyRole('USER')")
+    @PostFilter(value = "filterObject.owner == authentication.name")
+    @PostMapping("/post-filter")
+    public List<BonbonResponse> postFilter(
+            Authentication auth,
+            @RequestBody List<BonbonResponse> request
+    ) {
+        bonbonComponent.comCheck();
+        return request;
+    }
 
     public record BonbonResponse(String owner) {
 

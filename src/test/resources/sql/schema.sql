@@ -1,5 +1,5 @@
-create table sql
+create table bon_bon
 (
     id   integer primary key,
-    type varchar(255)
+    candy_type varchar(255)
 );

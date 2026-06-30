@@ -35,6 +35,13 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+/**
+ * shell script to run as init.d
+ */
+bootJar {
+    launchScript()
+}
+
 tasks.named('test') {
     useJUnitPlatform()
     testLogging {

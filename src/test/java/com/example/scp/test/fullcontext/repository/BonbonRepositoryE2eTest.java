@@ -4,11 +4,13 @@ import com.example.scp.entity.BonBon;
 import com.example.scp.repository.BonbonRepository;
 import com.example.scp.repository.projection.BonbonProjection;
 import com.example.scp.test.fullcontext.AbstractE2eConfiguration;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +50,24 @@ class BonbonRepositoryE2eTest extends AbstractE2eConfiguration {
         Assertions.assertEquals("1 chocolate", projection.getType());
         BonbonProjection dynamicProjection = bonbonRepository.findByCandyType("cookie", BonbonProjection.class);
         Assertions.assertEquals("2 cookie", dynamicProjection.getType());
+    }
+
+    @Test
+    void rowMapperTest() {
+        Assertions.assertEquals(
+                "[BonBon{id=1, candyType='chocolate'}, BonBon{id=2, candyType='cookie'}]",
+                jdbcTemplate.query("select * from bon_bon order by id",
+                        new RowMapper<BonBon>() {
+                            @Override
+                            public @Nullable BonBon mapRow(ResultSet rs, int rowNum) throws SQLException {
+                                BonBon bonBon = new BonBon();
+                                bonBon.setId(rs.getLong("id"));
+                                bonBon.setCandyType(rs.getString("candy_type"));
+                                return bonBon;
+                            }
+                        }
+                ).toString()
+        );
     }
 
     @Test

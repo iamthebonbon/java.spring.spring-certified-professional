@@ -18,22 +18,25 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class WebLayerE2eTest extends AbstractE2eConfiguration {
+class WebLayerActuatorE2eTest extends AbstractE2eConfiguration {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
     @LocalManagementPort
     private int managementPort;
 
+    /**
+     * init metrics: http.server.requests
+     */
     @Test
     @Order(100)
-    void getBonbonTest() {
+    void bonbonTest() {
         var response = testRestTemplate
                 .getForEntity(
                         URI.create("/bonbon"),
                         String.class
                 );
-        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode().value());
+        Assertions.assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatusCode().value());
     }
 
     @Test
@@ -45,15 +48,11 @@ class WebLayerE2eTest extends AbstractE2eConfiguration {
                 String.class
         );
         Assertions.assertEquals(HttpStatus.SERVICE_UNAVAILABLE.value(), response.getStatusCode().value());
+
         JsonNode root = getJsonNode(response);
-
-        String status = root.get("status").asText();
-        String dbStatus = root.at("/components/db/status").asText();
-        String database = root.at("/components/db/details/database").asText();
-
-        Assertions.assertEquals("DOWN", status);
-        Assertions.assertEquals("", dbStatus);
-        Assertions.assertEquals("", database);
+        Assertions.assertEquals("DOWN", root.get("status").asText());
+        Assertions.assertEquals("", root.at("/components/db/status").asText());
+        Assertions.assertEquals("", root.at("/components/db/details/database").asText());
     }
 
     @Test
@@ -67,15 +66,11 @@ class WebLayerE2eTest extends AbstractE2eConfiguration {
                 String.class
         );
         Assertions.assertEquals(HttpStatus.SERVICE_UNAVAILABLE.value(), response.getStatusCode().value());
+
         JsonNode root = getJsonNode(response);
-
-        String status = root.get("status").asText();
-        String dbStatus = root.at("/components/db/status").asText();
-        String database = root.at("/components/db/details/database").asText();
-
-        Assertions.assertEquals("DOWN", status);
-        Assertions.assertEquals("UP", dbStatus);
-        Assertions.assertEquals("PostgreSQL", database);
+        Assertions.assertEquals("DOWN", root.get("status").asText());
+        Assertions.assertEquals("UP", root.at("/components/db/status").asText());
+        Assertions.assertEquals("PostgreSQL", root.at("/components/db/details/database").asText());
     }
 
     @Test
@@ -89,15 +84,11 @@ class WebLayerE2eTest extends AbstractE2eConfiguration {
                 String.class
         );
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+
         JsonNode root = getJsonNode(response);
-
-        String status = root.get("status").asText();
-        String dbStatus = root.at("/components/db/status").asText();
-        String database = root.at("/components/db/details/database").asText();
-
-        Assertions.assertEquals("UP", status);
-        Assertions.assertEquals("UP", dbStatus);
-        Assertions.assertEquals("PostgreSQL", database);
+        Assertions.assertEquals("UP", root.get("status").asText());
+        Assertions.assertEquals("UP", root.at("/components/db/status").asText());
+        Assertions.assertEquals("PostgreSQL", root.at("/components/db/details/database").asText());
     }
 
     @Test
@@ -116,7 +107,7 @@ class WebLayerE2eTest extends AbstractE2eConfiguration {
 
     @Test
     @Order(200)
-    void actuatorBonbonTest() throws JsonProcessingException {
+    void actuatorBonbonTest() {
         RestTemplate restTemplate = testRestTemplate
                 .withBasicAuth("user", "user")
                 .getRestTemplate();
@@ -138,13 +129,10 @@ class WebLayerE2eTest extends AbstractE2eConfiguration {
                         String.class
                 );
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+
         JsonNode root = getJsonNode(response);
-
-        String one = root.at("/bonbon/one").asText();
-        String two = root.at("/bonbon/two").asText();
-
-        Assertions.assertEquals("Marmalade", one);
-        Assertions.assertEquals("Marshmallow", two);
+        Assertions.assertEquals("Marmalade", root.at("/bonbon/one").asText());
+        Assertions.assertEquals("Marshmallow", root.at("/bonbon/two").asText());
     }
 
     @Test

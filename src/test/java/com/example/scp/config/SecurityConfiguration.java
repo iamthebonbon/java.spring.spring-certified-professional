@@ -4,8 +4,10 @@ import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointR
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
@@ -15,40 +17,63 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration {
 
     @Bean
     @Order(1)
     public SecurityFilterChain actuatorChain(HttpSecurity http) throws Exception {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(
-                new InMemoryUserDetailsManager(
-                        User.builder().username("user").password(passwordEncoder().encode("user")).build()
-                )
-        );
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        http.securityMatcher(EndpointRequest.toAnyEndpoint())
-                .authenticationProvider(daoAuthenticationProvider)
+        http
+                .authenticationProvider(managementAuthProvider())
+                .securityMatcher(EndpointRequest.toAnyEndpoint())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(EndpointRequest.to("health")).permitAll()
                         .anyRequest().authenticated()
                 )
+                .httpBasic(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(Customizer.withDefaults());
+                .formLogin(AbstractHttpConfigurer::disable);
         return http.build();
     }
 
     @Bean
     @Order(2)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.securityMatcher("/**")
+        http
+                .authenticationProvider(mainAuthProvider())
+                .securityMatcher("/**")
                 .authorizeHttpRequests(
                         auth -> auth
                                 .anyRequest().authenticated()
-                );
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.formLogin(AbstractHttpConfigurer::disable);
+                )
+                .httpBasic(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable);
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationProvider mainAuthProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(
+                new InMemoryUserDetailsManager(
+                        User.builder().username("bonbon").password(passwordEncoder().encode("bonbon")).build(),
+                        User.builder().username("user").password(passwordEncoder().encode("user")).roles("USER").build(),
+                        User.builder().username("admin").password(passwordEncoder().encode("admin")).roles("ADMIN").build()
+                )
+        );
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        return daoAuthenticationProvider;
+    }
+
+    @Bean
+    public AuthenticationProvider managementAuthProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(
+                new InMemoryUserDetailsManager(
+                        User.builder().username("user").password(passwordEncoder().encode("user")).build()
+                )
+        );
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        return daoAuthenticationProvider;
     }
 
     @Bean

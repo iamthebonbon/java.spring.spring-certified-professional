@@ -27,9 +27,9 @@ public class SecurityConfiguration {
 
     @Bean
     @Order(1)
-    public SecurityFilterChain actuatorChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain actuatorSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authenticationProvider(managementAuthProvider())
+                .authenticationProvider(actuatorAuthProvider())
                 .securityMatcher(EndpointRequest.toAnyEndpoint())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(EndpointRequest.to("health")).permitAll()
@@ -43,18 +43,18 @@ public class SecurityConfiguration {
 
     @Bean
     @Order(2)
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain mainSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authenticationProvider(mainAuthProvider())
-                .securityMatcher("/**")
+                .securityMatcher("/bonbon/**")
                 .authorizeHttpRequests(
                         auth -> auth
                                 .anyRequest().authenticated()
                 )
+                .cors(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+                .formLogin(AbstractHttpConfigurer::disable);
         return http.build();
     }
 
@@ -72,7 +72,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public AuthenticationProvider managementAuthProvider() {
+    public AuthenticationProvider actuatorAuthProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(
                 new InMemoryUserDetailsManager(
                         User.builder().username("user").password(passwordEncoder().encode("user")).build()
@@ -88,7 +88,8 @@ public class SecurityConfiguration {
     }
 
     /**
-     * doesn't work as expected
+     * cors is used by security only
+     * mvc works on WebConfiguration#addCorsMappings
      */
     @Bean
     public CorsConfiguration corsConfiguration() {
@@ -101,7 +102,8 @@ public class SecurityConfiguration {
     }
 
     /**
-     * doesn't work as expected
+     * cors is used by security only
+     * mvc works on WebConfiguration#addCorsMappings
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

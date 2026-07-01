@@ -21,7 +21,7 @@ import java.util.stream.StreamSupport;
 
 @Transactional
 @Sql(statements = {
-        "create table bon_bon (id integer, candy_type varchar(255));",
+        "create table bon_bon (id integer, created_at timestamp, updated_at timestamp, created_by varchar(255), updated_by varchar(255), candy_type varchar(255));",
         "insert into bon_bon (id, candy_type) values (1, 'chocolate')",
         "insert into bon_bon (id, candy_type) values (2, 'cookie')"
 })

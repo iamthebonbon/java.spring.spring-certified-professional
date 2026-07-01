@@ -3,10 +3,7 @@ package com.example.scp.test.fullcontext;
 import com.example.scp.component.BonbonComponent;
 import com.example.scp.controller.BonbonController;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
@@ -22,7 +19,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class WebLayerBonbonE2eTest extends AbstractE2eConfiguration {
 
     @Autowired
@@ -31,7 +27,6 @@ class WebLayerBonbonE2eTest extends AbstractE2eConfiguration {
     private BonbonComponent component;
 
     @Test
-    @Order(100)
     void bonbonTest() {
         var response = testRestTemplate
                 .withBasicAuth("bonbon", "bonbon")
@@ -43,7 +38,6 @@ class WebLayerBonbonE2eTest extends AbstractE2eConfiguration {
     }
 
     @Test
-    @Order(100)
     void preAuthorizeForbiddenTest() {
         var response = testRestTemplate
                 .withBasicAuth("bonbon", "bonbon")
@@ -58,7 +52,6 @@ class WebLayerBonbonE2eTest extends AbstractE2eConfiguration {
     }
 
     @Test
-    @Order(100)
     void preAuthorizeOkTest() {
         var response = testRestTemplate
                 .withBasicAuth("user", "user")
@@ -68,12 +61,35 @@ class WebLayerBonbonE2eTest extends AbstractE2eConfiguration {
                         BonbonController.BonbonResponse.class
                 );
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
-        Assertions.assertEquals("user", response.getBody().owner());
+        Assertions.assertEquals("user", response.getBody().getOwner());
         verify(component, times(1)).comCheck();
     }
 
     @Test
-    @Order(100)
+    void authorizeReturnObjectDeniedTest() {
+        var response = testRestTemplate
+                .withBasicAuth("user", "user")
+                .postForEntity(
+                        URI.create("/bonbon/authorize-return-object"),
+                        new BonbonController.BonbonResponse("user"),
+                        BonbonController.BonbonResponse.class
+                );
+        Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatusCode().value());
+    }
+
+    @Test
+    void authorizeReturnObjectTest() {
+        var response = testRestTemplate
+                .withBasicAuth("admin", "admin")
+                .postForEntity(
+                        URI.create("/bonbon/authorize-return-object"),
+                        new BonbonController.BonbonResponse("admin"),
+                        BonbonController.BonbonResponse.class
+                );
+        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+    }
+
+    @Test
     void preAuthorizeListForbiddenTest() {
         var response = testRestTemplate
                 .withBasicAuth("user", "user")
@@ -91,7 +107,6 @@ class WebLayerBonbonE2eTest extends AbstractE2eConfiguration {
     }
 
     @Test
-    @Order(100)
     void preAuthorizeListOkTest() {
         var response = testRestTemplate
                 .withBasicAuth("user", "user")
@@ -109,7 +124,6 @@ class WebLayerBonbonE2eTest extends AbstractE2eConfiguration {
     }
 
     @Test
-    @Order(100)
     void postAuthorizeForbiddenTest() {
         var response = testRestTemplate
                 .withBasicAuth("user", "user")
@@ -123,7 +137,6 @@ class WebLayerBonbonE2eTest extends AbstractE2eConfiguration {
     }
 
     @Test
-    @Order(100)
     void postAuthorizeOkTest() {
         var response = testRestTemplate
                 .withBasicAuth("user", "user")
@@ -137,7 +150,6 @@ class WebLayerBonbonE2eTest extends AbstractE2eConfiguration {
     }
 
     @Test
-    @Order(100)
     void postAuthorizeListForbiddenTest() {
         var response = testRestTemplate
                 .withBasicAuth("user", "user")
@@ -155,7 +167,6 @@ class WebLayerBonbonE2eTest extends AbstractE2eConfiguration {
     }
 
     @Test
-    @Order(100)
     void postAuthorizeListOkTest() {
         var response = testRestTemplate
                 .withBasicAuth("user", "user")
@@ -173,7 +184,6 @@ class WebLayerBonbonE2eTest extends AbstractE2eConfiguration {
     }
 
     @Test
-    @Order(100)
     void preFilterTest() {
         var response = testRestTemplate
                 .withBasicAuth("user", "user")
@@ -193,7 +203,6 @@ class WebLayerBonbonE2eTest extends AbstractE2eConfiguration {
     }
 
     @Test
-    @Order(100)
     void postFilterTest() {
         var response = testRestTemplate
                 .withBasicAuth("user", "user")

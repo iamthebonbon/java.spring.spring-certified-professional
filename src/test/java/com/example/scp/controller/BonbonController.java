@@ -5,6 +5,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.access.prepost.PreFilter;
+import org.springframework.security.authorization.method.AuthorizeReturnObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,16 @@ public class BonbonController {
     @PreAuthorize("hasAnyRole('USER') && #request.owner == authentication.name")
     @PostMapping("/pre-authorize")
     public BonbonResponse preAuthorize(
+            @RequestBody BonbonResponse request
+    ) {
+        bonbonComponent.comCheck();
+        return request;
+    }
+
+    @AuthorizeReturnObject
+    @PreAuthorize("hasAnyRole('USER') && #request.owner == authentication.name")
+    @PostMapping("/authorize-return-object")
+    public BonbonResponse authorizeReturnObject(
             @RequestBody BonbonResponse request
     ) {
         bonbonComponent.comCheck();
@@ -95,8 +106,30 @@ public class BonbonController {
         return request;
     }
 
-    public record BonbonResponse(String owner) {
+    public static class BonbonResponse {
+        private String owner;
+        private String adminOnly;
 
+        public BonbonResponse(String owner) {
+            this.owner = owner;
+        }
+
+        public String getOwner() {
+            return owner;
+        }
+
+        public void setOwner(String owner) {
+            this.owner = owner;
+        }
+
+        @PreAuthorize("hasAnyRole('ADMIN')")
+        public String getAdminOnly() {
+            return adminOnly;
+        }
+
+        public void setAdminOnly(String adminOnly) {
+            this.adminOnly = adminOnly;
+        }
     }
 
 }

@@ -64,7 +64,7 @@ public class SecurityConfiguration {
                 new InMemoryUserDetailsManager(
                         User.builder().username("bonbon").password(passwordEncoder().encode("bonbon")).build(),
                         User.builder().username("user").password(passwordEncoder().encode("user")).roles("USER").build(),
-                        User.builder().username("admin").password(passwordEncoder().encode("admin")).roles("ADMIN").build()
+                        User.builder().username("admin").password(passwordEncoder().encode("admin")).roles("USER", "ADMIN").build()
                 )
         );
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());

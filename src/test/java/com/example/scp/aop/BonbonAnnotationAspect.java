@@ -19,6 +19,11 @@ public class BonbonAnnotationAspect {
         LOGGER.info("bindAnnotation: {}", requiredRole);
     }
 
+    @Before("bean(bonbonService)")
+    public void bonbonService(JoinPoint joinPoint) {
+        LOGGER.info("bean(bonbonService): {}", System.currentTimeMillis());
+    }
+
     @Before("@annotation(com.example.scp.aop.annotation.BonbonAnnotation)")
     public void referenceTypeAnnotation(JoinPoint jp) {
         LOGGER.info("referenceTypeAnnotation: {}", System.currentTimeMillis());

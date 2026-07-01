@@ -19,6 +19,7 @@ class BonbonServiceE2eTest extends AbstractE2eConfiguration {
         service.test();
         Assertions.assertTrue(output.getAll().contains("halo"));
         Assertions.assertTrue(output.getAll().contains("bindAnnotation"));
+        Assertions.assertTrue(output.getAll().contains("bean(bonbonService)"));
         Assertions.assertTrue(output.getAll().contains("referenceTypeAnnotation"));
         Assertions.assertTrue(output.getAll().contains("within"));
         Assertions.assertTrue(output.getAll().contains("target"));

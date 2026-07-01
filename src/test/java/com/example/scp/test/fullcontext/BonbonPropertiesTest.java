@@ -13,7 +13,7 @@ public class BonbonPropertiesTest extends AbstractE2eConfiguration {
     @Test
     public void test() {
         Assertions.assertEquals(
-                "BonbonProperties[one=Marmalade, two=Marshmallow, three=null, custom=houston, halo from `bonbon.properties`]",
+                "BonbonProperties{one='Marmalade', two='Marshmallow', three='null', custom='houston, halo from `bonbon.properties`'}",
                 bonbonProperties.toString()
         );
     }

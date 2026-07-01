@@ -2,11 +2,12 @@ package com.example.scp.repository;
 
 import com.example.scp.entity.BonBon;
 import com.example.scp.repository.projection.BonbonProjection;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BonbonRepository extends CrudRepository<BonBon, Long> {
+public interface BonbonRepository extends JpaRepository<BonBon, Long> {
 
     BonbonProjection findByCandyType(String type);
 

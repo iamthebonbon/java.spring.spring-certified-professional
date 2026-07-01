@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,6 +32,32 @@ class BonbonRepositoryE2eTest extends AbstractE2eConfiguration {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private BonbonRepository bonbonRepository;
+
+    @Test
+    void incorrectResultSizeDataAccessException() {
+        IncorrectResultSizeDataAccessException exception = Assertions.assertThrows(IncorrectResultSizeDataAccessException.class, () -> {
+            jdbcTemplate.queryForObject("select * from bon_bon", new RowMapper<BonBon>() {
+                @Override
+                public @Nullable BonBon mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    return new BonBon();
+                }
+            });
+        });
+        Assertions.assertEquals(2, exception.getActualSize());
+    }
+
+    @Test
+    void incorrectResultSizeDataAccessException2() {
+        IncorrectResultSizeDataAccessException exception = Assertions.assertThrows(IncorrectResultSizeDataAccessException.class, () -> {
+            jdbcTemplate.queryForObject("select * from bon_bon where id = 99", new RowMapper<BonBon>() {
+                @Override
+                public @Nullable BonBon mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    return new BonBon();
+                }
+            });
+        });
+        Assertions.assertEquals(0, exception.getActualSize());
+    }
 
     @Test
     void jdbcTemplateTest() {

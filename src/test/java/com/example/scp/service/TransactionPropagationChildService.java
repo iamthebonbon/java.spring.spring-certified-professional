@@ -10,12 +10,12 @@ public class TransactionPropagationChildService {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void requireNew(Runnable runnable) {
         runnable.run();
-        throw new RuntimeException();
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void requireNewException(Runnable runnable) {
         runnable.run();
+        throw new RuntimeException();
     }
 
 }

@@ -19,7 +19,7 @@ public class BonbonAnnotationAspect {
         LOGGER.info("bindAnnotation: {}", requiredRole);
     }
 
-    @Before("bean(bonbonService)")
+    @Before("bean(bonbonServiceImpl)")
     public void bonbonService(JoinPoint joinPoint) {
         LOGGER.info("bean(bonbonService): {}", System.currentTimeMillis());
     }

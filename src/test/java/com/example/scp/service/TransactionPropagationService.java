@@ -28,12 +28,14 @@ public class TransactionPropagationService {
 
     @Transactional
     public void requiredWithRequiredNewWithFullRollback(Runnable parentRunnable, Runnable runnable) {
-        childService.requireNew(runnable);
+        parentRunnable.run();
+        childService.requireNewException(runnable);
     }
 
     @Transactional
     public void requiredWithRequiredNewWithChildRollback(Runnable parentRunnable, Runnable runnable) {
         try {
+            parentRunnable.run();
             childService.requireNewException(runnable);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
